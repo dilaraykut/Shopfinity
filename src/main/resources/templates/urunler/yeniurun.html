@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	th:replace="~{_layout::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<section>
+		<div style="margin: 50px 100px 0 200px">
+			<h3>Yeni Ürün</h3>
+			<!-- form içinden dosyanın sunucuya gönderilmesi için -->
+			<form th:action="@{/urunler/yeniurun}" method="POST"
+				th:object="${productDto}" enctype="multipart/form-data">
+				<input type="hidden" name="image" id="image" value="noimage.jpg">
+				<label style="display: block; margin-top: 10px">Resim : </label> <input
+					type="file" id="img" name="img" class="form-control"
+					accept="image/png, image/jpeg, image/jpg, image/webp"
+					placeholder="Resim seçiniz.">
+
+				<div class="alert alert-danger"
+					th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></div>
+				<div class="alert alert-danger col-sm-6" th:if="${maxUploadSize}"
+					th:text="#{max.upload.size}"></div>
+
+				<label style="display: block; margin-top: 10px">Üst Kategori
+					: </label> <select id="category" name="category" th:field="*{category}"
+					class="form-control">
+					<option th:value="null" th:text="'Üst Kategori Seçiniz'"></option>
+					<th:block th:each="kategory:${categories}">
+						<th:block th:if="${kategory.parent == null}">
+							<option th:value="${kategory.id}" th:text="${kategory.name}"></option>
+
+							<th:block  th:each="subCategory:${kategory.children}">
+								<option th:value="${subCategory.id}"
+									th:text="${'&nbsp;&nbsp;-->' + subCategory.name}"></option>
+									
+									<th:block th:each="subsubCategory:${subCategory.children}">
+									<option th:value="${subsubCategory.id}"
+									th:text="${'&nbsp;&nbsp;&nbsp;&nbsp;-->' + subsubCategory.name}"></option>
+									</th:block>
+							
+							</th:block>
+						</th:block>
+					</th:block>
+				</select> 
+				
+				<label style="display: block; margin-top: 10px">Ürün
+					Adı : </label> <input style="display: block; margin-top: 10px" type="text"
+					class="form-control" id="name" name="name" th:field="*{name}"
+					placeholder="Ürün Adı">
+
+				<div class="alert alert-danger" th:if="${#fields.hasErrors('name')}"
+					th:errors="*{name}"></div>
+
+				<label style="display: block; margin-top: 10px">İngilizce
+					Ürün Adı : </label> <input style="display: block; margin-top: 10px"
+					type="text" class="form-control" id="enName" name="enName"
+					th:field="*{enName}" placeholder="İngilizce Ürün Adı">
+					
+		
+							<label for="barcode" class="form-label">Barkod</label> <input
+								type="text" id="barcode" name="barcode" th:field="*{barcode}"
+								class="form-control" placeholder="Barkodu Giriniz">
+						
+					<label for="quantity" class="form-label">Miktar</label> <input
+								type="number" id="quantity" name="quantity"
+								th:field="*{quantity}" class="form-control"
+								placeholder="Miktar Giriniz">
+
+							<div class="alert alert-danger"
+								th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">
+							</div>
+						<label for="criticalStockLevel" class="form-label">Kritik
+								Stok Miktarı</label> <input type="number" id="criticalStockLevel"
+								name="criticalStockLevel" th:field="*{criticalStockLevel}"
+								class="form-control" placeholder="Stok Miktarı Giriniz">
+
+							<div class="alert alert-danger"
+								th:if="${#fields.hasErrors('criticalStockLevel')}"
+								th:errors="*{criticalStockLevel}"></div>
+									
+								
+								
+						<label for="quantityType" class="form-label">Ölçü Birimi</label>
+							<select id="quantityType" name="quantityType" class="form-select">
+								<option th:each="quantityType : ${quantityTypes}"
+									th:value="${quantityType.name()}"
+									th:text="#{${quantityType.type}}"></option>
+							</select>
+					<input
+					type="submit" value="Kaydet" class="btn btn-success mt-3">
+			</form>
+		</div>
+	</section>
+	
+</body>
+</html>

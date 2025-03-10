@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{_layout::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<section>
+		
+		
+		<div class="text-center mb-3">
+            <h3 class="fw-bold" th:text="${category.name} + ' Kategorisindeki Ürünler'"></h3>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        	
+            <div>
+                <a href="/urunler/yeniurun" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> <span th:text="#{product.add}"></span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center g-3">
+            <div class="col-md-3" th:each="product:${products}">
+                <a th:href="@{/product/{id}(id=${product.id})}" class="text-decoration-none">
+                    <div class="card text-dark text-center d-flex align-items-center justify-content-center" style="background-color: #f5f5f5; border: 1px solid #ddd;">
+                    
+                    <img th:src="'/img/' + ${product.image}" alt="Ürün Resmi"
+                     class="card-img-top" style="width:100%; height:150px; object-fit:cover;">
+                        <div class="card-body">
+    <a th:href="@{/urunler/{id}(id=${product.id})}" class="text-decoration-none">
+    <h5 class="card-title text-primary" th:text="${product.name}"></h5>
+</a>
+
+    <!-- Butonları flex-container içine aldık -->
+    <div class="d-flex justify-content-between w-100">
+        <a th:href="@{/urunler/urunduzenle/{id} (id=${product.id})}" class="btn btn-outline-secondary me-2">
+            <i class="fas fa-edit"></i> <span th:text="#{product.update}"></span>
+        </a>
+        
+        <a th:href="@{/urunler/urunsil/{id} (id=${product.id})}"
+           th:data-confirm-delete="|Ürünü silmek istediğinize emin misiniz?|"
+           onclick="if(!confirm(this.getAttribute('data-confirm-delete'))) return false;" 
+           class="btn btn-danger">
+            <i class="fas fa-trash"></i> <span th:text="#{product.delete}"></span>
+        </a>
+    </div>
+</div>
+</div>
+</a>
+</div>
+</div>
+	</section>
+</body>
+</html>

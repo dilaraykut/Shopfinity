@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="https://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+	<title>Shopfinity</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+	<!-- HEADER (Navigasyon Çubuğu) -->
+    <nav class="navbar navbar-expand-lg navbar-dark " style="background-color: #0B132B;">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">🌍 Shopfinity</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/urunler}">Tüm Ürünler</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/kategoriler}">Kategoriler</a></li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Aradığınız ürünü yazınız..." aria-label="Search">
+                    <button class="btn btn-outline-light" type="submit">🔍</button>
+                </form>
+                <div class="ms-3">
+                    <a class="btn btn-light" th:href="@{/cart}">🛒 Sepetim</a>
+                    <a class="btn btn-light" th:href="@{/favorites}">❤️ Favorilerim</a>
+                    <a class="btn btn-light" th:href="@{/profile}">👤 Dilara Kısa</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ANA İÇERİK ALANI -->
+    <main class="container my-4">
+        <div th:replace="${content}"></div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto bg-light text-center py-3">
+        <p class="mb-0">Shopfinity ©2025 Created by Dilara Aykut Kısa</p>
+    </footer>
+</body>
+</html>

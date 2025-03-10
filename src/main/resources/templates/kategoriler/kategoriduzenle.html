@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{_layout::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<section>
+		<div class="text-center mb-3">
+            <h3 class="fw-bold" th:text="#{category.update}"></h3>
+        </div>
+        
+        <div style="margin: 50px 100px 0 200px">
+			
+			<form
+				th:action="@{/kategoriler/kategoriduzenle/{id} (id=${category.id})}"
+				method="POST" th:object="${category}">
+
+				
+				
+				<input type="hidden" name="parent" id="parent" th:value="${category.parent}">
+				
+					
+					<label	style="display: block; margin-top: 10px" th:text="#{category.name}"></label> <input
+					style="display: block; margin-top: 10px" type="text" id="name"
+					name="name" th:field="*{name}" placeholder="Kategori Adı" class="form-control">
+				<div class="alert alert-danger" th:if="${#fields.hasErrors('name')}"
+					th:errors="*{name}"></div>
+					
+					<label	style="display: block; margin-top: 10px">İngilizce Kategori Adı : </label> <input
+					style="display: block; margin-top: 10px" type="text" id="enName"
+					name="enName" th:field="*{enName}" placeholder="İngilizce Kategori Adı" class="form-control">
+					
+					
+				<input style="display: block; margin-top: 10px" type="submit" class="btn btn-success"
+					value="Güncelle">
+			</form>
+		</div>
+	</section>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	th:replace="~{_layout::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<section>
+		<div class="text-center mb-3">
+            <h3 class="fw-bold" th:text="#{category.add.new}"></h3>
+        </div>
+        
+        <div style="margin: 50px 100px 0 200px">
+        
+        <form th:action="@{/kategoriler/yenikategori}" method="POST"
+				th:object="${category}">
+
+				<label style="display: block; margin-top: 10px">Üst Kategori
+					: </label> <select id="parent" name="parent" th:field="*{parent}"
+					class="form-control">
+					<option th:value="null" th:text="'Üst Kategori Seçiniz'"></option>
+					<th:block th:each="category:${categories}">
+						<th:block th:if="${category.parent == null}">
+							<option th:value="${category.id}" th:text="${category.name}"></option>
+
+							<th:block th:each="subCategory:${category.children}">
+								<option th:value="${subCategory.id}"
+									th:text="${'&nbsp;&nbsp;-->' + subCategory.name}"></option>
+									
+									<th:block th:each="subsubCategory:${subCategory.children}">
+									<option th:value="${subsubCategory.id}"
+									th:text="${'&nbsp;&nbsp;&nbsp;&nbsp;-->' + subsubCategory.name}"></option>
+									</th:block>
+							
+							</th:block>
+						</th:block>
+					</th:block>
+				</select> 
+				
+				<label style="display: block; margin-top: 10px">Kategori
+					Adı : </label> <input style="display: block; margin-top: 10px" type="text"
+					class="form-control" id="name" name="name" th:field="*{name}"
+					placeholder="Kategori Adı">
+
+				<div class="alert alert-danger col-sm-6"
+					th:if="${uniqueCategoryConstraint}"
+					th:text="#{unique.category.error}"></div>
+				<div class="alert alert-danger" th:if="${#fields.hasErrors('name')}"
+					th:errors="*{name}"></div>
+
+				<label style="display: block; margin-top: 10px">İngilizce
+					Kategori Adı : </label> <input style="display: block; margin-top: 10px"
+					type="text" class="form-control" id="enName" name="enName"
+					th:field="*{enName}" placeholder="İngilizce Kategori Adı">
+
+				<input
+					type="submit" value="Kaydet" class="btn btn-primary mt-3">
+			</form>
+        </div>
+	
+	</section>
+
+</body>
+</html>

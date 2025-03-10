@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	th:replace="~{_layout::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title th:text="${title}">Ana Sayfa</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <section class="position-relative text-center">
+        <img th:src="@{/img/background.png}" class="w-100 img-fluid" style="max-height: 350px; object-fit: cover;" alt="Hoş Geldiniz">
+        <div class="position-absolute top-50 start-50 translate-middle text-white  p-4 rounded">
+            <h1 class="fw-bold">Hoş Geldiniz!</h1>
+            <p class="lead">Shopfinity ile alışverişin keyfini çıkarın.</p>
+            <a href="/kategoriler" class="btn btn-primary">Keşfet</a>
+        </div>
+    </section>
+
+    <!-- Öne Çıkan Ürünler -->
+    <!-- Öne Çıkan Ürünler -->
+<section class="featured-products text-center my-5">
+    <h2>Öne Çıkan Ürünler</h2>
+		
+    
+
+</section>
+
+
+
+
+</body>
+</html>
