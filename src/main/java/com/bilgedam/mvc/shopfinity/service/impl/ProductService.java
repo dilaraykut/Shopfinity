@@ -28,57 +28,54 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements ProductReadable, ProductWriteable{
+public class ProductService implements ProductReadable, ProductWriteable {
 
-	//@Autowired
 	private final ProductRepository productRepository;
-	
+
 	private final ModelMapper modelMapper;
-	
-	
+
 	@Override
 	public List<Product> getList() {
-		
+
 		return productRepository.findAll();
 	}
 
 	@Override
 	public Product getById(Integer id) {
-		
-		return productRepository.findById(id).orElseThrow(()-> new EntityNotFoundException());
+
+		return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
 	}
 
 	@Override
 	public List<Product> getList(String sortBy, String direction) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public void add(Product entity) {
-		
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		UserEntity user = (UserEntity)authentication.getPrincipal();
-		
+
+		UserEntity user = (UserEntity) authentication.getPrincipal();
+
 		entity.setInsertedUser(user);
-		
+
 		productRepository.save(entity);
-		
+
 	}
 
 	@Override
 	public void change(Integer id, Product entity) {
 		Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
-		
-		if(!productToUpdate.getVersion().equals(entity.getVersion())) {
+
+		if (!productToUpdate.getVersion().equals(entity.getVersion())) {
 			throw new OptimisticEntityLockException(entity, "");
 		}
-		
+
 		modelMapper.map(entity, productToUpdate);
 		productRepository.save(productToUpdate);
-		
-		
+
 	}
 
 	@Override
@@ -90,25 +87,28 @@ public class ProductService implements ProductReadable, ProductWriteable{
 
 	@Override
 	public Page<Product> getPaginatedAndSortedProducts(ListProperties listProperties) {
-		Sort sort = "asc".equalsIgnoreCase(listProperties.getDirection()) ? Sort.by(listProperties.getSortBy()).ascending() : Sort.by(listProperties.getSortBy()).descending();
+		Sort sort = "asc".equalsIgnoreCase(listProperties.getDirection())
+				? Sort.by(listProperties.getSortBy()).ascending()
+				: Sort.by(listProperties.getSortBy()).descending();
 
 		Pageable pageable = PageRequest.of(listProperties.getPage(), listProperties.getSize(), sort);
 
 		Locale locale = LocaleContextHolder.getLocale();
-		
-		if(locale.getLanguage().equals("tr"))
-			return productRepository.findByDeletedFalseAndNameLikeIgnoreCase(pageable, "%" + listProperties.getKeyword() + "%");
-		else 	if(locale.getLanguage().equals("en"))
-			return productRepository.findByDeletedFalseAndEnNameLikeIgnoreCase(pageable, "%" + listProperties.getKeyword() + "%");
+
+		if (locale.getLanguage().equals("tr"))
+			return productRepository.findByDeletedFalseAndNameLikeIgnoreCase(pageable,
+					"%" + listProperties.getKeyword() + "%");
+		else if (locale.getLanguage().equals("en"))
+			return productRepository.findByDeletedFalseAndEnNameLikeIgnoreCase(pageable,
+					"%" + listProperties.getKeyword() + "%");
 		else
-			return productRepository.findByDeletedFalseAndEnNameLikeIgnoreCase(pageable, "%" + listProperties.getKeyword() + "%");
+			return productRepository.findByDeletedFalseAndEnNameLikeIgnoreCase(pageable,
+					"%" + listProperties.getKeyword() + "%");
 	}
-	
+
 	@Override
 	public List<Product> getProductsByCategoryId(Short categoryId) {
-        return productRepository.findByCategoryIdAndDeletedFalse(categoryId);
-    }
-	
-
+		return productRepository.findByCategoryIdAndDeletedFalse(categoryId);
+	}
 
 }

@@ -1,4 +1,5 @@
 package com.bilgedam.mvc.shopfinity.controller;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -26,18 +27,17 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/kategoriler")
 @RequiredArgsConstructor
 public class CategoryController {
-	
+
 	private final CategoryReadable categoryReadableService;
 	private final CategoryWriteable categoryWriteableService;
 	private final ProductReadable productReadableService;
-	
 
 	private static final String KATEGORILER_INDEX_SAYFA = "kategoriler/index";
 
-	@GetMapping({ "", "/" }) 
+	@GetMapping({ "", "/" })
 	public String getAll(Model model, @RequestParam(defaultValue = "id") String sortBy,
 			@RequestParam(defaultValue = "desc") String direction, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int size, @RequestParam(defaultValue = "") String keyword) {
+			@RequestParam(defaultValue = "15") int size, @RequestParam(defaultValue = "") String keyword) {
 
 		ListProperties listProperties = new ListProperties(sortBy, direction, page, size, keyword);
 
@@ -47,24 +47,22 @@ public class CategoryController {
 		model.addAttribute("totalPages", categoryList.getTotalPages());
 		model.addAttribute("totalElements", categoryList.getTotalElements());
 		model.addAttribute("currentPage", page);
-		model.addAttribute("direction", "asc".equalsIgnoreCase(direction) ? "desc" : "asc"); 
-																								
+		model.addAttribute("direction", "asc".equalsIgnoreCase(direction) ? "desc" : "asc");
 
 		return KATEGORILER_INDEX_SAYFA;
 	}
 
-	
-	@GetMapping("/yenikategori") 
+	@GetMapping("/yenikategori")
 	public String newCategory(Model model) {
-		
+
 		List<Category> categories = categoryReadableService.getList();
-		model.addAttribute("categories",categories);
-		model.addAttribute("category", new Category()); 
+		model.addAttribute("categories", categories);
+		model.addAttribute("category", new Category());
 
 		return "kategoriler/yenikategori";
 	}
 
-	@PostMapping("/yenikategori") 
+	@PostMapping("/yenikategori")
 	public String newCategory(@Valid @ModelAttribute("category") Category category, BindingResult result, Model model) {
 
 		if (result.hasErrors()) {
@@ -81,9 +79,9 @@ public class CategoryController {
 	public String updateCategory(@PathVariable short id, Model model) {
 
 		Category duzenlenecekKategori = categoryReadableService.getById(id);
-		
+
 		List<Category> categories = categoryReadableService.getList();
-		model.addAttribute("categories",categories);
+		model.addAttribute("categories", categories);
 
 		model.addAttribute("category", duzenlenecekKategori);
 
@@ -99,7 +97,7 @@ public class CategoryController {
 		}
 		categoryWriteableService.change(id, category);
 
-		return "redirect:/kategoriler"; 
+		return "redirect:/kategoriler";
 	}
 
 	@GetMapping("/kategorisil/{id}")
@@ -111,19 +109,17 @@ public class CategoryController {
 	}
 
 	@GetMapping("/{id}")
-    public String listCategoryProducts(@PathVariable Short id, Model model) {
-        // Kategoriyi getir
-        Category kategori = categoryReadableService.getById(id);
-        if (kategori == null) {
-            return "redirect:/kategoriler"; // Kategori yoksa yönlendir
-        }
+	public String listCategoryProducts(@PathVariable Short id, Model model) {
+		Category kategori = categoryReadableService.getById(id);
+		if (kategori == null) {
+			return "redirect:/kategoriler";
+		}
 
-        // Kategoriye ait ürünleri getir
-        List<Product> urunler = productReadableService.getProductsByCategoryId(id);
+		List<Product> urunler = productReadableService.getProductsByCategoryId(id);
 
-        model.addAttribute("category", kategori);
-        model.addAttribute("products", urunler);
+		model.addAttribute("category", kategori);
+		model.addAttribute("products", urunler);
 
-        return "kategoriler/urunler"; // ✅ Yeni ürün listeleme sayfası
-    }
+		return "kategoriler/urunler";
+	}
 }

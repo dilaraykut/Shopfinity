@@ -4,81 +4,114 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style th:if="${#httpServletRequest.getRequestURI() == '/urunler'}">
+.fixed-pagination {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: white;
+	text-align: center;
+	padding: 10px;
+	box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+</style>
+
 </head>
 <body>
-	
+
 	<section class="container my-4">
-		
+
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/"
+					th:text="#{breadcrumb.home}"></a></li>
+				<li class="breadcrumb-item active" aria-current="page"
+					th:text="#{product.menu}"></li>
+			</ol>
+		</nav>
+
 		<div class="text-center mb-3">
-            <h3 class="fw-bold" th:text="#{products.page.header}"></h3>
-        </div>
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-        	
-            <div>
-                <a href="/urunler/yeniurun" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> <span th:text="#{product.add}"></span>
-                </a>
-            </div>
-        </div>
-        
-        <div class="row justify-content-center g-3">
-            <div class="col-md-3" th:each="product:${productList}">
-                <a th:href="@{/product/{id}(id=${product.id})}" class="text-decoration-none">
-                    <div class="card text-dark text-center d-flex align-items-center justify-content-center" style="background-color: #f5f5f5; border: 1px solid #ddd;">
-                    
-                    <img th:src="'/img/' + ${product.image}" alt="Ürün Resmi"
-                     class="card-img-top" style="width:100%; height:150px; object-fit:cover;">
-                        <div class="card-body">
-    <a th:href="@{/urunler/{id}(id=${product.id})}" class="text-decoration-none">
-    <h5 class="card-title text-primary" th:text="${product.name}"></h5>
-</a>
+			<h3 class="fw-bold" th:text="#{product.menu}"></h3>
+		</div>
+
+		<div class="d-flex justify-content-between align-items-center mb-4">
+
+			<div sec:authorize="hasRole('ADMIN')">
+				<a href="/urunler/yeniurun" class="btn btn-primary"> <i
+					class="fas fa-plus"></i> <span th:text="#{product.add}"></span>
+				</a>
+			</div>
+		</div>
+
+		<div class="row justify-content-center g-3">
+			<div class="col-md-3" th:each="product:${productList}">
+				<a th:href="@{/urunler/{id}(id=${product.id})}"
+					class="text-decoration-none">
+					<div
+						class="card text-dark text-center d-flex align-items-center justify-content-center"
+						style="background-color: #f5f5f5; border: 1px solid #ddd;">
+
+						<img th:src="'/img/' + ${product.image}" alt="Ürün Resmi"
+							class="card-img-top"
+							style="width: 100%; height: 150px; object-fit: cover;">
+						<div class="card-body">
+							<a th:href="@{/urunler/{id}(id=${product.id})}"
+								class="text-decoration-none">
+								<h5 class="card-title text-primary"
+									th:text="${#locale.language == 'tr' ? product.name : product.enName}"></h5>
+								<p class="text-muted"
+									th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 2, 'COMMA')} + ' TL'"></p>
+							</a>
 
 
-    <!-- Butonları flex-container içine aldık -->
-    <div class="d-flex justify-content-between w-100">
-        <a th:href="@{/urunler/urunduzenle/{id} (id=${product.id})}" class="btn btn-outline-secondary me-2">
-            <i class="fas fa-edit"></i> <span th:text="#{product.update}"></span>
-        </a>
-        
-        <a th:href="@{/urunler/urunsil/{id} (id=${product.id})}"
-           th:data-confirm-delete="|Ürünü silmek istediğinize emin misiniz?|"
-           onclick="if(!confirm(this.getAttribute('data-confirm-delete'))) return false;" 
-           class="btn btn-danger">
-            <i class="fas fa-trash"></i> <span th:text="#{product.delete}"></span>
-        </a>
-    </div>
-</div>
+							<div sec:authorize="hasRole('ADMIN')"
+								class="d-flex justify-content-between w-100">
+								<a th:href="@{/urunler/urunduzenle/{id} (id=${product.id})}"
+									class="btn btn-outline-secondary me-2"> <i
+									class="fas fa-edit"></i> <span th:text="#{product.update}"></span>
+								</a> <a th:href="@{/urunler/urunsil/{id} (id=${product.id})}"
+									th:data-confirm-delete="|Ürünü silmek istediğinize emin misiniz?|"
+									onclick="if(!confirm(this.getAttribute('data-confirm-delete'))) return false;"
+									class="btn btn-danger"> <i class="fas fa-trash"></i> <span
+									th:text="#{product.delete}"></span>
+								</a>
+							</div>
+							<div sec:authorize="!hasRole('ADMIN')" class="text-center mt-2">
+								<a th:href="@{/urunler/{id}(id=${product.id})}"
+									class="btn btn-success btn-sm" th:text="#{product.view}"></a>
+							</div>
+						</div>
 
-                    </div>
-                </a>
-            </div>
-        </div>
-		
-		<div class="row col-sm-8 mx-auto" th:if="${totalPages > 1}" style="position:fixed;bottom:0"> <!-- eğer toplam sayfa sayısı birden fazlaysa -->
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<div class="row col-sm-8 mx-auto fixed-pagination"
+			th:if="${totalPages > 1}">
 			<div class="row col-sm-6 mx-auto">
-				<p>Ürün Sayısı : [[${totalElements}]]</p> 
-				
+				<p>Ürün Sayısı : [[${totalElements}]]</p>
 				<br>
-				
 				<div class="col-sm-1">
 					<a th:href="@{'/urunler?page=0'}">İlk</a>
 				</div>
-				
 				<div class="col-sm-6 mx-auto">
-				<!-- eğer bulunduğumuz sayfa gösterilen sayfa sayısından farklıysa link olarak göster aksi takdirde kırmızı renkte sayı göster -->
-					<span th:each="i:${#numbers.sequence(1,totalPages)}">
-						<a th:href="@{'/urunler?page=' + ${i-1}}"
-						th:unless="${currentPage == (i-1)}">[[${i}]]</a>
-						<span style="color:red;font-weight:bold" th:if="${currentPage ==(i-1)}">[[${i}]]</span>
+					<span th:each="i:${#numbers.sequence(1,totalPages)}"> <a
+						th:href="@{'/urunler?page=' + ${i-1}}"
+						th:unless="${currentPage == (i-1)}">[[${i}]]</a> <span
+						style="color: red; font-weight: bold"
+						th:if="${currentPage == (i-1)}">[[${i}]]</span>
 					</span>
-				
-				</div>				
+				</div>
 				<div class="col-sm-1">
 					<a th:href="@{'/urunler?page=' + ${totalPages-1}}">Son</a>
 				</div>
 			</div>
-			
+		</div>
+
+
 		</div>
 	</section>
 </body>

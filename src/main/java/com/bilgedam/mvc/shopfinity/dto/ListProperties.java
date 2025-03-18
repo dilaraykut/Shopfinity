@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListProperties implements Serializable{
+public class ListProperties implements Serializable {
 
 	private String sortBy;
 	private String direction;

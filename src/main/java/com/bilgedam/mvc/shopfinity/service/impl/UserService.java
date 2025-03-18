@@ -23,10 +23,10 @@ public class UserService implements UserDetailsService, UserReadable, UserWritea
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder encoder;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return userRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException(username));
+		return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class UserService implements UserDetailsService, UserReadable, UserWritea
 
 	@Override
 	public UserEntity getById(Integer id) {
-		return userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException());
+		return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
 	}
 
 	@Override
@@ -49,24 +49,22 @@ public class UserService implements UserDetailsService, UserReadable, UserWritea
 			sort = Sort.by(sortBy).descending();
 		}
 
-		// return categoryRepository.findAll();
-		return null; // userRepository.findByUsername(sort); 
+		return null;
 	}
 
 	@Override
 	public void add(UserEntity entity) {
-		
+
 		userRepository.save(entity);
-		
+
 	}
 
 	@Override
 	public void change(Integer id, UserEntity entity) {
-		
+
 		UserEntity user = getById(id);
-		
-		user.setBirthDate(entity.getBirthDate());
-		//user.setEmail(entity.getEmail());
+
+		user.setEmail(entity.getEmail());
 		user.setName(entity.getName());
 		user.setPassword(encoder.encode(entity.getPassword()));
 		user.setRole(Role.ROLE_USER);
@@ -75,10 +73,9 @@ public class UserService implements UserDetailsService, UserReadable, UserWritea
 
 	@Override
 	public void remove(Integer id) {
-		
+
 		userRepository.deleteById(id);
-		
+
 	}
-	
 
 }

@@ -8,27 +8,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-	
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	    http.authorizeHttpRequests(auth -> auth
-	        		.requestMatchers("/", "/locale","/users/**").permitAll()
-	            .anyRequest().authenticated() 
-	        )
-	        .formLogin(form -> form.loginPage("/login").permitAll())
-	        .logout(logout -> logout.permitAll());
-	    
-	    return http.build();
+		http.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/", "/locale", "/users/**", "/kayit", "/css/**", "/img/**", "/js/**",
+						"/kategoriler/**", "/urunler/**", "/search/**")
+				.permitAll().requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated())
+				.formLogin(form -> form.loginPage("/login").permitAll().defaultSuccessUrl("/", true))
+				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/").permitAll());
+
+		return http.build();
 	}
-	
+
 	@Bean
 	PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
 
 }

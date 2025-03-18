@@ -19,10 +19,10 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class IndexController {
-	
+
 	@Autowired
 	private ImageStorageService imageStorageService;
-	
+
 	@GetMapping("img/{fileName:.+}")
 	public ResponseEntity<Resource> getImage(@PathVariable String fileName) {
 
@@ -32,25 +32,21 @@ public class IndexController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
 				.body(file);
 	}
-	
+
 	@GetMapping("/locale")
 	public String getLocale(@RequestParam String language, HttpServletRequest request) {
-		// service katmanında seçilen dil gerekli olduğunda kullanmak için
-		// bu nesneye dil ayarını vermek gerekir.
+
 		LocaleContextHolder.setLocale(new Locale(language));
-		
+
 		String referer = request.getHeader("referer");
-		
-		return "redirect:"+ referer; 
+
+		return "redirect:" + referer;
 	}
-	
-	
-	
+
 	@GetMapping("/search")
 	public String search(String keyword) {
 		keyword = URLEncoder.encode(keyword);
-		return "redirect:/kategoriler?keyword=" + keyword;
+		return "redirect:/urunler?keyword=" + keyword;
 	}
-	
-	
+
 }

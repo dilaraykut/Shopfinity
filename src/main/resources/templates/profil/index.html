@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{_layout :: layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Profilim</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+	<section class="container mt-5">
+
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/"
+					th:text="#{breadcrumb.home}"></a></li>
+				<li class="breadcrumb-item active" aria-current="page"
+					th:text="#{profile}"></li>
+			</ol>
+		</nav>
+
+		<h2 class="fw-bold" th:text="#{profile}"></h2>
+
+		<div th:if="${successMessage}" class="alert alert-success">
+			<p th:text="${successMessage}"></p>
+		</div>
+
+		<div th:if="${errorMessage}" class="alert alert-danger">
+			<p th:text="${errorMessage}"></p>
+		</div>
+
+
+		<form th:action="@{/profil/guncelle}" method="post" class="mt-4">
+			<div class="mb-3">
+				<label class="form-label" th:text="#{user.name}"></label> <input
+					type="text" class="form-control" name="name"
+					th:value="${user.name}" required>
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label" th:text="#{user.surname}"></label> <input
+					type="text" class="form-control" name="surname"
+					th:value="${user.surname}" required>
+			</div>
+
+			<button type="submit" class="btn btn-primary"
+				th:text="#{user.info.update}"></button>
+		</form>
+
+		<hr>
+
+	</section>
+</body>
+</html>

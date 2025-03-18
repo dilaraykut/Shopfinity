@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{_layout :: layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Kullanıcı Listesi</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+	<section class="container mt-5">
+
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/"
+					th:text="#{breadcrumb.home}"></a></li>
+				<li class="breadcrumb-item active" aria-current="page"
+					th:text="#{users}"></li>
+			</ol>
+		</nav>
+
+		<h2 class="fw-bold" th:text="#{admin.all.users}"></h2>
+
+		<table class="table table-bordered mt-3">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th th:text="#{name}"></th>
+					<th th:text="#{surname}"></th>
+					<th th:text="#{mail}"></th>
+					<th th:text="#{role}"></th>
+					<th th:text="#{actions}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user : ${userList}">
+					<td th:text="${user.id}"></td>
+					<td th:text="${user.name}"></td>
+					<td th:text="${user.surname}"></td>
+					<td th:text="${user.email}"></td>
+
+					<td>
+						<form th:action="@{/admin/kullanicilar/rol-guncelle}"
+							method="post">
+							<input type="hidden" name="userId" th:value="${user.id}">
+							<select name="newRole" class="form-select">
+								<option value="ROLE_ADMIN"
+									th:selected="${user.role.name() == 'ROLE_ADMIN'}"
+									th:text="#{admin.role.admin}"></option>
+								<option value="ROLE_USER"
+									th:selected="${user.role.name() == 'ROLE_USER'}"
+									th:text="#{admin.role.user}"></option>
+							</select>
+							<button type="submit" class="btn btn-primary btn-sm mt-2"
+								th:text="#{update}"></button>
+						</form>
+					</td>
+
+
+
+					<td>
+
+						<form th:action="@{/admin/kullanicilar/sil/{id}(id=${user.id})}"
+							method="post"
+							th:onsubmit="|return confirm('#{delete.user.confirm}');|">
+							<button type="submit" class="btn btn-danger btn-sm"
+								th:text="#{delete}"></button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</section>
+</body>
+</html>

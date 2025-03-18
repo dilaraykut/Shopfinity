@@ -1,41 +1,139 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org"
+	th:replace="~{_layout :: layout(~{::section})}">
 <head>
-    <title>Shopping Cart</title>
-    <!-- Add your CSS here -->
+<title>Sepet</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Shopping Cart</h1>
-    <div th:if="${cart.items.size() == 0}">
-        <p>Your cart is empty.</p>
-    </div>
-    <div th:if="${cart.items.size() > 0}">
-        <table>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Actions</th>
-            </tr>
-            <tr th:each="item : ${cart.items}">
-                <td th:text="${item.product.name}"></td>
-                <td th:text="${item.quantity}"></td>
-                <td th:text="${item.product.price}"></td>
-                <td>
-                    <form th:action="@{/cart/remove}" method="post">
-                        <input type="hidden" th:name="itemId" th:value="${item.id}" />
-                        <button type="submit">Remove</button>
-                    </form>
-                </td>
-            </tr>
-        </table>
-        <div>
-            <a href="/order/create">Proceed to Checkout</a>
-        </div>
-    </div>
-    <!-- Add your JavaScript here -->
+	<section class="container mt-5">
+
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/"
+					th:text="#{breadcrumb.home}"></a></li>
+				<li class="breadcrumb-item active" aria-current="page"
+					th:text="#{cart}"></li>
+			</ol>
+		</nav>
+
+		<div class="row">
+
+			<div class="col-md-8">
+				<h3 class="fw-bold text-center mb-4" th:text="#{your.cart}"></h3>
+
+				<div th:if="${#lists.isEmpty(addedProducts)}"
+					class="text-center mt-4">
+					<div class="alert alert-warning">
+						<h4 th:text="#{cart.info}"></h4>
+					</div>
+				</div>
+
+
+				<div class="row">
+
+					<div class="col-md-12 mb-3" th:each="product : ${addedProducts}">
+						<div class="card p-2 shadow-sm">
+							<a th:href="@{/urunler/{id}(id=${product.id})}"
+								class="text-decoration-none text-dark">
+								<div class="row g-0">
+									<div class="col-md-3 d-flex align-items-center">
+										<img th:src="@{'/img/' + ${product.image}}"
+											class="img-fluid rounded"
+											style="width: 100px; height: 100px;">
+									</div>
+									<div class="col-md-6 d-flex align-items-center">
+										<div class="card-body">
+											<h5 class="card-title"
+												th:text="${#locale.language == 'tr' ? product.name : product.enName}"></h5>
+											<p class="card-text text-muted">
+												<span th:text="#{price}"></span> <span
+													th:text="|${#numbers.formatDecimal(product.price, 0, 'POINT', 2, 'COMMA')} TL|"></span>
+											</p>
+
+											<p class="card-text text-muted">
+												<span th:text="#{product.barcode}"></span> <span
+													th:text="${product.barcode}"></span>
+											</p>
+										</div>
+									</div>
+									<div
+										class="col-md-3 d-flex align-items-center justify-content-center">
+										<form th:action="@{/sepet/remove/{id}(id=${product.id})}"
+											method="get">
+
+											<button class="btn btn-danger btn-sm"
+												th:text="#{cart.remove.item}"></button>
+										</form>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<a href="/urunler" class="btn btn-secondary mt-3"
+					th:text="#{cart.continue.button}"></a>
+			</div>
+
+
+			<div class="col-md-4">
+				<div class="card p-4 shadow">
+					<h4 class="fw-bold" th:text="#{order.summary}"></h4>
+					<p>
+						<span th:text="#{total.items}"></span> <span
+							th:text="${addedProducts.size()}"></span> <span th:text="#{item}"></span>
+					</p>
+					<p>
+						<span th:text="#{total.product.cost}"></span> <span
+							id="totalPrice"
+							th:text="|${#numbers.formatDecimal(#aggregates.sum(addedProducts.![price]) ?: 0, 0, 'POINT', 2, 'COMMA')} TL|">
+						</span>
+					</p>
+					<p>
+						<span th:text="#{shipping.fee}"></span> <strong>29.99 TL</strong>
+					</p>
+					<h5 class="fw-bold">
+						<span th:text="#{total.amount}"></span> <span
+							th:text="|${addedProducts != null and not #lists.isEmpty(addedProducts) ? 
+                    #numbers.formatDecimal((#aggregates.sum(addedProducts.![price]) ?: 0) + 29.99, 0, 'POINT', 2, 'COMMA') 
+                    : #numbers.formatDecimal(29.99, 0, 'POINT', 2, 'COMMA')} TL|">
+						</span>
+
+					</h5>
+
+
+					<form id="orderForm" th:action="@{/siparisler/create}"
+						method="post">
+						<input type="hidden" name="products"
+							th:value="${#strings.listJoin(addedProducts.![id], ',')}" />
+						<button type="submit" class="btn btn-success w-100 mt-3"
+							th:disabled="${#lists.isEmpty(addedProducts)}"
+							th:text="#{place.order}"
+							onclick="alert('Siparişiniz oluşturuluyor...');"></button>
+					</form>
+
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		document
+				.addEventListener(
+						"DOMContentLoaded",
+						function() {
+							let total = parseFloat(document
+									.getElementById("totalPrice").textContent
+									.replace(" TL", ""));
+							let shipping = 29.99;
+							document.getElementById("grandTotal").textContent = (total + shipping)
+									.toFixed(2)
+									+ " TL";
+						});
+	</script>
+
 </body>
 </html>
-
-
-

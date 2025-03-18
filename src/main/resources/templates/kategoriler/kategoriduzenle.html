@@ -1,41 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org"
-      th:replace="~{_layout::layout(~{::section})}">
+	th:replace="~{_layout::layout(~{::section})}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Kategori Düzenle</title>
 </head>
 <body>
 
 	<section>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/"
+					th:text="#{breadcrumb.home}"></a></li>
+				<li class="breadcrumb-item"><a href="/kategoriler"
+					th:text="#{category.menu}"></a></li>
+				<li class="breadcrumb-item active" aria-current="page"
+					th:text="#{category.update}"></li>
+			</ol>
+		</nav>
+
 		<div class="text-center mb-3">
-            <h3 class="fw-bold" th:text="#{category.update}"></h3>
-        </div>
-        
-        <div style="margin: 50px 100px 0 200px">
-			
+			<h3 class="fw-bold" th:text="#{category.update}"></h3>
+		</div>
+
+		<div style="margin: 50px 100px 0 200px">
+
 			<form
 				th:action="@{/kategoriler/kategoriduzenle/{id} (id=${category.id})}"
 				method="POST" th:object="${category}">
 
-				
-				
-				<input type="hidden" name="parent" id="parent" th:value="${category.parent}">
-				
-					
-					<label	style="display: block; margin-top: 10px" th:text="#{category.name}"></label> <input
+				<label style="display: block; margin-top: 10px"
+					th:text="#{category.name}"></label> <input
 					style="display: block; margin-top: 10px" type="text" id="name"
-					name="name" th:field="*{name}" placeholder="Kategori Adı" class="form-control">
+					name="name" th:field="*{name}"
+					th:placeholder="#{category.placeholder}" class="form-control">
 				<div class="alert alert-danger" th:if="${#fields.hasErrors('name')}"
 					th:errors="*{name}"></div>
-					
-					<label	style="display: block; margin-top: 10px">İngilizce Kategori Adı : </label> <input
+
+				<label style="display: block; margin-top: 10px"
+					th:text="#{category.enName}"></label> <input
 					style="display: block; margin-top: 10px" type="text" id="enName"
-					name="enName" th:field="*{enName}" placeholder="İngilizce Kategori Adı" class="form-control">
-					
-					
-				<input style="display: block; margin-top: 10px" type="submit" class="btn btn-success"
-					value="Güncelle">
+					name="enName" th:field="*{enName}"
+					th:placeholder="#{category.enName.placeholder}"
+					class="form-control"> <input
+					style="display: block; margin-top: 10px" type="submit"
+					class="btn btn-success" th:value="#{update}">
 			</form>
 		</div>
 	</section>

@@ -18,10 +18,10 @@ public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-	
+
 	@Bean
-	CommandLineRunner runner(UserRepository userRepository, PasswordEncoder passwordEncoder ) {
-		
+	CommandLineRunner runner(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+
 		UserEntity admin = new UserEntity();
 		admin.setName("Dilara");
 		admin.setSurname("Kısa");
@@ -30,35 +30,23 @@ public class Application {
 		String parola = passwordEncoder.encode("123");
 		admin.setPassword(parola);
 		admin.setRole(Role.ROLE_ADMIN);
-		
-		
+
 		UserEntity user = new UserEntity();
-		user.setName("Fatma");
-		user.setSurname("Şen");
+		user.setName("Murat");
+		user.setSurname("Kısa");
 		user.setBirthDate(LocalDate.of(2000, 1, 2));
-		user.setEmail("fatma@gmail.com");
+		user.setEmail("murat@gmail.com");
 		parola = passwordEncoder.encode("123");
 		user.setPassword(parola);
 		user.setRole(Role.ROLE_USER);
-		
-		UserEntity user2 = new UserEntity();
-		user2.setName("Fatma");
-		user2.setSurname("Şen");
-		user2.setBirthDate(LocalDate.of(2000, 1, 2));
-		user2.setEmail("user2@gmail.com");
-		parola = passwordEncoder.encode("123");
-		user2.setPassword(parola);
-		user2.setRole(Role.ROLE_USER);
-		
-		return args ->{
-			if(!userRepository.existsByEmail(admin.getEmail()))
+
+		return args -> {
+			if (!userRepository.existsByEmail(admin.getEmail()))
 				userRepository.save(admin);
-			
-			if(!userRepository.existsByEmail(user.getEmail()))
+
+			if (!userRepository.existsByEmail(user.getEmail()))
 				userRepository.save(user);
-			
-			if(!userRepository.existsByEmail(user2.getEmail()))
-				userRepository.save(user2);
+
 		};
 	}
 

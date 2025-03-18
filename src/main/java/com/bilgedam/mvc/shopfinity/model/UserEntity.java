@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name="users")
+@Entity(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -30,30 +30,29 @@ public class UserEntity implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Size(min=2, max=30)
+	@Size(min = 2, max = 30)
 	private String name;
-	
-	@Size(min=2, max=30)
+
+	@Size(min = 2, max = 30)
 	private String surname;
-	
-	@Size(min=2, max=30)
+
+	@Size(min = 2, max = 30)
 	@Email
 	private String email;
-	
+
 	@Past
 	private LocalDate birthDate;
-	
-	//@Size(min=8,max=30)
-	private String password; 
-	
+
+	private String password;
+
 	private Role role;
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
+
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(role.name()));
-		
+
 		return authorities;
 	}
 
@@ -62,7 +61,7 @@ public class UserEntity implements UserDetails {
 		return password;
 	}
 
-	@Override// Spring Security username unique olmasını sağlar sağlamazsa kendimiz unique yapacağız
+	@Override
 	public String getUsername() {
 		return email;
 	}

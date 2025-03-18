@@ -15,13 +15,13 @@ import com.bilgedam.mvc.shopfinity.service.Storeable;
 
 @Service
 public class ImageStorageService implements Storeable {
-	
+
 	public static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/img";
 
 	@Override
 	public void save(MultipartFile file) throws IOException {
-		Path imagePath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename()); 
-																					
+		Path imagePath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
+
 		Files.write(imagePath, file.getBytes());
 	}
 

@@ -21,12 +21,12 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryReadable, CategoryWriteable {
-	
+
 	private final CategoryRepository categoryRepository;
 
-	
 	@Override
 	public void add(Category category) {
+
 		categoryRepository.save(category);
 	}
 
@@ -37,7 +37,6 @@ public class CategoryServiceImpl implements CategoryReadable, CategoryWriteable 
 
 		categoryToUpdate.setName(category.getName());
 		categoryToUpdate.setEnName(category.getEnName());
-		categoryToUpdate.setParent(category.getParent());
 
 		categoryRepository.save(categoryToUpdate);
 	}
@@ -52,7 +51,7 @@ public class CategoryServiceImpl implements CategoryReadable, CategoryWriteable 
 	}
 
 	@Override
-	public List<Category> getList(String sortBy, String direction) { 
+	public List<Category> getList(String sortBy, String direction) {
 		Sort sort = null;
 
 		if ("asc".equalsIgnoreCase(direction)) {
@@ -61,9 +60,8 @@ public class CategoryServiceImpl implements CategoryReadable, CategoryWriteable 
 			sort = Sort.by(sortBy).descending();
 		}
 
-				
-		return categoryRepository.findByDeletedFalse(sort); 
-															
+		return categoryRepository.findByDeletedFalse(sort);
+
 	}
 
 	@Override
@@ -73,7 +71,7 @@ public class CategoryServiceImpl implements CategoryReadable, CategoryWriteable 
 
 	@Override
 	public List<Category> getList() {
-		
+
 		return categoryRepository.findByDeletedFalse();
 	}
 
@@ -88,19 +86,24 @@ public class CategoryServiceImpl implements CategoryReadable, CategoryWriteable 
 
 	@Override
 	public Page<Category> getPaginatedAndSortedCategories(ListProperties listProperties) {
-		Sort sort = "asc".equalsIgnoreCase(listProperties.getDirection()) ? Sort.by(listProperties.getSortBy()).ascending() : Sort.by(listProperties.getSortBy()).descending();
+		Sort sort = "asc".equalsIgnoreCase(listProperties.getDirection())
+				? Sort.by(listProperties.getSortBy()).ascending()
+				: Sort.by(listProperties.getSortBy()).descending();
 
 		Pageable pageable = PageRequest.of(listProperties.getPage(), listProperties.getSize(), sort);
 
 		Locale locale = LocaleContextHolder.getLocale();
-		
-		if(locale.getLanguage().equals("tr"))
-			return categoryRepository.findByDeletedFalseAndNameLikeIgnoreCase(pageable, "%" + listProperties.getKeyword() + "%");
-		else 	if(locale.getLanguage().equals("en"))
-			return categoryRepository.findByDeletedFalseAndEnNameLikeIgnoreCase(pageable, "%" + listProperties.getKeyword() + "%");
+
+		if (locale.getLanguage().equals("tr"))
+			return categoryRepository.findByDeletedFalseAndNameLikeIgnoreCase(pageable,
+					"%" + listProperties.getKeyword() + "%");
+		else if (locale.getLanguage().equals("en"))
+			return categoryRepository.findByDeletedFalseAndEnNameLikeIgnoreCase(pageable,
+					"%" + listProperties.getKeyword() + "%");
 		else
-			return categoryRepository.findByDeletedFalseAndEnNameLikeIgnoreCase(pageable, "%" + listProperties.getKeyword() + "%");
-		
+			return categoryRepository.findByDeletedFalseAndEnNameLikeIgnoreCase(pageable,
+					"%" + listProperties.getKeyword() + "%");
+
 	}
 
 }

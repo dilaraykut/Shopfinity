@@ -23,39 +23,40 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="urunler")
+@Table(name = "urunler")
 public class Product {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
-	@Size(min=2,max=30, message = "{product.name.size.error}")
+
+	@Size(min = 2, max = 50, message = "{product.name.size.error}")
 	private String name;
-	@Size(min=2,max=30, message = "{product.name.size.error}")
+	@Size(min = 2, max = 50, message = "{product.name.size.error}")
 	private String enName;
-	
+
 	@ManyToOne
 	private Category category;
 	private String barcode;
-	private double quantity; // 3
-	private QuantityType quantityType; // KG
+	private double quantity;
+	private QuantityType quantityType;
 	private double criticalStockLevel;
 	private String image;
-	
-	private String description;
 
-    private BigDecimal price;
-    
+	private String description;
+	private String enDescription;
+
+	private BigDecimal price;
+
 	@Past
-	private LocalDateTime insertedDate; // Entity kendisi date alabilir
-	private UserEntity insertedUser; // service katmanında kullanıcya erişebilir
+	private LocalDateTime insertedDate;
+	private UserEntity insertedUser;
 	private LocalDateTime lastUpdateDate;
 	private UserEntity lastUpdateUser;
-	
+
 	@Version
 	private Timestamp version;
-	
+
 	private boolean deleted;
 
 }

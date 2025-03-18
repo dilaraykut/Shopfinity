@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{_layout :: layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Siparişlerim</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+	<section class="container mt-5">
+
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/"
+					th:text="#{breadcrumb.home}"></a></li>
+				<li class="breadcrumb-item active" aria-current="page"
+					th:text="#{admin.orders}"></li>
+			</ol>
+		</nav>
+
+		<h2 class="fw-bold" th:text="#{admin.all.orders}"></h2>
+
+
+		<table class="table table-bordered mt-3">
+			<thead>
+				<tr>
+					<th th:text="#{product.menu}"></th>
+					<th th:text="#{total.amount}"></th>
+					<th th:text="#{order.date}"></th>
+					<th th:text="#{admin.page.username}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="order : ${orders}">
+
+					<td>
+						<ul>
+							<li th:each="product : ${order.products}"
+								th:text="|${#locale.language == 'tr' ? product.name : product.enName} - ${#numbers.formatDecimal(product.price, 0, 'POINT', 2, 'COMMA')} TL|">
+							</li>
+						</ul>
+
+					</td>
+
+					<td><span
+						th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'POINT', 2, 'COMMA')} + ' TL'"></span></td>
+
+					<td
+						th:text="${#temporals.format(order.purchaseDate, 'dd/MM/yyyy HH:mm')}"></td>
+					<td><span th:text="${order.insertedUser.name}"></span> <span
+						th:text="${order.insertedUser.surname}"></span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<a href="/urunler" class="btn btn-secondary"
+			th:text="#{cart.continue.button}"></a>
+	</section>
+</body>
+</html>

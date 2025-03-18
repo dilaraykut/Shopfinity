@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.bilgedam.mvc.shopfinity.model.Category;
 
-public interface CategoryRepository extends JpaRepository<Category, Short>{
+public interface CategoryRepository extends JpaRepository<Category, Short> {
 
 	List<Category> findByDeletedFalse();
 
@@ -20,5 +20,6 @@ public interface CategoryRepository extends JpaRepository<Category, Short>{
 	Page<Category> findByDeletedFalseAndNameLike(Pageable pageable, String keyword);
 
 	Page<Category> findByDeletedFalseAndNameLikeIgnoreCase(Pageable pageable, String string);
+
 	Page<Category> findByDeletedFalseAndEnNameLikeIgnoreCase(Pageable pageable, String string);
 }
